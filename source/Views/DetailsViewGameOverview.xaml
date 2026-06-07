@@ -54,9 +54,9 @@
                                 <!-- ============ CENTERED HERO ============ -->
                                 <StackPanel Grid.Row="1" HorizontalAlignment="Center" MaxWidth="1100"
                                             Margin="0,16,0,8">
-                                    <Image Name="PART_ImageCover" MaxHeight="200" Stretch="Uniform"
-                                           HorizontalAlignment="Center" Margin="0,0,0,18"
-                                           RenderOptions.BitmapScalingMode="Fant" />
+                                    <!-- Cover intentionally omitted from the hero: the banner above IS the
+                                         art, so a centered cover would duplicate it (e.g. on Addams where
+                                         background == cover). -->
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                                         <Image Name="PART_ImageIcon" MaxHeight="40" MaxWidth="40"
                                                Margin="0,0,12,0" VerticalAlignment="Center"
