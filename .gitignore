@@ -1,0 +1,13 @@
+# Build output (Theme.csproj / Blend editing)
+bin/
+obj/
+.vs/
+*.user
+*.suo
+
+# Packaged theme artifacts
+*.pthm
+
+# OS cruft
+Thumbs.db
+desktop.ini
