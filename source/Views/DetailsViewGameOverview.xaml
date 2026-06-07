@@ -5,17 +5,16 @@
                     mc:Ignorable="d">
 
     <!-- ================================================================
-         GRAPHITE — Details view (prototype)
-         Layout:
-           • Header  : cover (right) + title / compact meta / action buttons
-           • Content : full width (left properties column removed / "freed")
-                       1. HowLongToBeat panel  (LaunchBox 3-tile design)
-                       2. Description (+ Notes)
-                       3. Underneath panel: Genres (left) | Achievements (right)
-         Data sources:
-           • HLTB     -> {PluginSettings Plugin=HowLongToBeat, Path=*Format}
-           • Achiev.  -> SuccessStory_PluginCompactList  (PlayniteAchievements is
-                         a drop-in SuccessStory replacement)
+         GRAPHITE - Details view (prototype v2)
+         Order:
+           Header  : cover (right) + title / meta line / action buttons
+           DETAILS : metadata block (above the HLTB grid)
+           ROW     : HowLongToBeat card (left, smaller) | Achievements card (right)
+           Description (+ Notes)
+         Bindings:
+           HLTB         -> {PluginSettings Plugin=HowLongToBeat, Path=*Format}
+           Achievements -> SuccessStory_PluginCompactList (PlayniteAchievements
+                           is a drop-in SuccessStory replacement)
          ================================================================ -->
 
     <Style TargetType="{x:Type DetailsViewGameOverview}">
@@ -59,7 +58,6 @@
                                            StretchDirection="Both" Stretch="Uniform"
                                            RenderOptions.BitmapScalingMode="Fant" />
                                     <StackPanel VerticalAlignment="Bottom" DockPanel.Dock="Left">
-                                        <!-- Title -->
                                         <DockPanel>
                                             <Image Name="PART_ImageIcon" MaxHeight="48" MaxWidth="48"
                                                    DockPanel.Dock="Left" Margin="0,0,12,0"
@@ -76,7 +74,7 @@
                                             </TextBlock>
                                         </DockPanel>
 
-                                        <!-- Compact meta line (replaces the old left column) -->
+                                        <!-- Quick-glance meta line (platform / release / completion) -->
                                         <WrapPanel Margin="0,12,0,0">
                                             <WrapPanel.Resources>
                                                 <Style TargetType="Button" BasedOn="{StaticResource PropertyItemButton}" />
@@ -85,12 +83,10 @@
                                                 </Style>
                                             </WrapPanel.Resources>
                                             <ItemsControl Name="PART_ItemsPlatforms" Margin="0,0,16,0" />
-                                            <ItemsControl Name="PART_ItemsDevelopers" Margin="0,0,16,0" />
                                             <Button Name="PART_ButtonReleaseDate" Margin="0,0,16,0" VerticalAlignment="Center" />
                                             <Button Name="PART_ButtonCompletionStatus" VerticalAlignment="Center" />
                                         </WrapPanel>
 
-                                        <!-- Action buttons -->
                                         <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top"
                                                     Orientation="Horizontal" Margin="0,16,0,0">
                                             <Button Name="PART_ButtonPlayAction"
@@ -107,111 +103,198 @@
                                     </StackPanel>
                                 </DockPanel>
 
-                                <!-- ============ MAIN CONTENT (full width) ============ -->
+                                <!-- ============ CONTENT ============ -->
                                 <StackPanel Grid.Row="2" MaxWidth="1200" Margin="0,8,0,0"
                                             HorizontalAlignment="Stretch">
 
-                                    <!-- HowLongToBeat panel (LaunchBox 3-tile design) -->
-                                    <Border x:Name="HltbCard"
-                                            Background="{DynamicResource DarkBackgroundBrush}"
-                                            BorderBrush="{DynamicResource DividerBrush}" BorderThickness="1"
-                                            CornerRadius="14" Padding="24,20">
-                                        <Border.Style>
-                                            <Style TargetType="Border">
-                                                <Setter Property="Visibility" Value="Collapsed" />
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding ElementName=HltbMainStory, Path=Visibility}" Value="Visible">
-                                                        <Setter Property="Visibility" Value="Visible" />
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding ElementName=HltbMainExtra, Path=Visibility}" Value="Visible">
-                                                        <Setter Property="Visibility" Value="Visible" />
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding ElementName=HltbCompletionist, Path=Visibility}" Value="Visible">
-                                                        <Setter Property="Visibility" Value="Visible" />
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </Border.Style>
-                                        <StackPanel>
-                                            <TextBlock Text="HOW LONG TO BEAT" FontFamily="{DynamicResource FontFamily}"
-                                                       FontWeight="Medium" FontSize="{DynamicResource FontSizeSmall}"
-                                                       Foreground="{DynamicResource TextBrushDarker}" />
-                                            <Grid Margin="0,16,0,0">
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="*" />
-                                                    <ColumnDefinition Width="12" />
-                                                    <ColumnDefinition Width="*" />
-                                                    <ColumnDefinition Width="12" />
-                                                    <ColumnDefinition Width="*" />
-                                                </Grid.ColumnDefinitions>
+                                    <!-- DETAILS (metadata, above the HLTB grid) -->
+                                    <StackPanel Margin="0,4,0,0">
+                                        <TextBlock Text="{DynamicResource LOCGameDetails}" Margin="0,0,0,5"
+                                                   Style="{DynamicResource BaseTextBlockStyle}" />
+                                        <Separator Background="{DynamicResource PanelSeparatorBrush}" />
+                                        <Grid HorizontalAlignment="Left" MaxWidth="700" Margin="0,8,0,0">
+                                            <GridEx ColumnCount="2" StarColumns="1" RowCount="9" AutoLayoutColumns="2">
                                                 <Grid.Resources>
-                                                    <Style x:Key="HltbTile" TargetType="Border">
-                                                        <Setter Property="Background" Value="{DynamicResource BackgroundBrush}" />
-                                                        <Setter Property="CornerRadius" Value="10" />
-                                                        <Setter Property="Padding" Value="12,14" />
-                                                    </Style>
-                                                    <Style x:Key="HltbIcon" TargetType="Path">
-                                                        <Setter Property="Width" Value="24" />
-                                                        <Setter Property="Height" Value="24" />
-                                                        <Setter Property="Stretch" Value="Uniform" />
-                                                        <Setter Property="Fill" Value="{DynamicResource TextBrushDarker}" />
-                                                        <Setter Property="HorizontalAlignment" Value="Center" />
-                                                        <Setter Property="Margin" Value="0,0,0,10" />
-                                                    </Style>
-                                                    <Style x:Key="HltbLabel" TargetType="TextBlock">
+                                                    <Style TargetType="TextBlock" BasedOn="{StaticResource BaseTextBlockStyle}" />
+                                                    <Style TargetType="Label" BasedOn="{StaticResource {x:Type Label}}">
+                                                        <Setter Property="Margin" Value="0,4,16,4" />
+                                                        <Setter Property="VerticalAlignment" Value="Top" />
                                                         <Setter Property="Foreground" Value="{DynamicResource TextBrushDarker}" />
-                                                        <Setter Property="HorizontalAlignment" Value="Center" />
-                                                        <Setter Property="Margin" Value="0,0,0,5" />
-                                                        <Setter Property="FontSize" Value="10" />
-                                                        <Setter Property="TextWrapping" Value="NoWrap" />
                                                     </Style>
-                                                    <Style x:Key="HltbValue" TargetType="TextBlock">
-                                                        <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
-                                                        <Setter Property="FontSize" Value="18" />
-                                                        <Setter Property="FontWeight" Value="Bold" />
-                                                        <Setter Property="HorizontalAlignment" Value="Center" />
-                                                        <Setter Property="Visibility" Value="Visible" />
-                                                        <Style.Triggers>
-                                                            <DataTrigger Binding="{Binding RelativeSource={RelativeSource Self}, Path=Text}" Value="-">
-                                                                <Setter Property="Visibility" Value="Collapsed" />
-                                                            </DataTrigger>
-                                                        </Style.Triggers>
+                                                    <Style TargetType="ItemsControl">
+                                                        <Setter Property="VerticalAlignment" Value="Center" />
                                                     </Style>
+                                                    <Style TargetType="Button" BasedOn="{StaticResource PropertyItemButton}" />
                                                 </Grid.Resources>
 
-                                                <Border Grid.Column="0" Style="{StaticResource HltbTile}">
-                                                    <StackPanel HorizontalAlignment="Center">
-                                                        <Path Style="{StaticResource HltbIcon}" Data="M18,2H6C4.9,2 4,2.9 4,4V20C4,21.1 4.9,22 6,22H18C19.1,22 20,21.1 20,20V4C20,2.9 19.1,2 18,2M18,20H6V4H7V12L10,9.5L13,12V4H18V20Z" />
-                                                        <TextBlock Text="MAIN STORY" Style="{StaticResource HltbLabel}" />
-                                                        <TextBlock x:Name="HltbMainStory" Style="{StaticResource HltbValue}"
-                                                                   Text="{PluginSettings Plugin=HowLongToBeat, Path=MainStoryFormat, FallbackValue='-'}" />
-                                                    </StackPanel>
-                                                </Border>
-                                                <Border Grid.Column="2" Style="{StaticResource HltbTile}">
-                                                    <StackPanel HorizontalAlignment="Center">
-                                                        <Path Style="{StaticResource HltbIcon}" Data="M3,5H21V7H3V5M3,11H21V13H3V11M3,17H15V19H3V17M19,15V19H17V21H19V23H21V21H23V19H21V15H19Z" />
-                                                        <TextBlock Text="MAIN + EXTRAS" Style="{StaticResource HltbLabel}" />
-                                                        <TextBlock x:Name="HltbMainExtra" Style="{StaticResource HltbValue}"
-                                                                   Text="{PluginSettings Plugin=HowLongToBeat, Path=MainExtraFormat, FallbackValue='-'}" />
-                                                    </StackPanel>
-                                                </Border>
-                                                <Border Grid.Column="4" Style="{StaticResource HltbTile}">
-                                                    <StackPanel HorizontalAlignment="Center">
-                                                        <Path Style="{StaticResource HltbIcon}" Data="M7,2H17V4H20V8C20,10.21 18.21,12 16,12C15.74,12 15.46,11.97 15.21,11.92C14.42,13.21 13.32,14.14 12,14.7V18H15V20H9V18H12V14.7C10.68,14.14 9.58,13.21 8.79,11.92C8.54,11.97 8.26,12 8,12C5.79,12 4,10.21 4,8V4H7V2M5,5V8C5,9.66 6.34,11 8,11C8.04,11 8.08,11 8.12,11C7.41,9.7 7,8.39 7,7V5H5M17,5V7C17,8.39 16.59,9.7 15.88,11C15.92,11 15.96,11 16,11C17.66,11 19,9.66 19,8V5H17Z" />
-                                                        <TextBlock Text="COMPLETIONIST" Style="{StaticResource HltbLabel}" />
-                                                        <TextBlock x:Name="HltbCompletionist" Style="{StaticResource HltbValue}"
-                                                                   Text="{PluginSettings Plugin=HowLongToBeat, Path=CompletionistFormat, FallbackValue='-'}" />
-                                                    </StackPanel>
-                                                </Border>
-                                            </Grid>
-                                            <TextBlock Text="Provided by HowLongToBeat" Margin="0,16,0,0"
-                                                       FontSize="10" HorizontalAlignment="Center"
-                                                       Foreground="{DynamicResource TextBrushDarker}" Opacity="0.55" />
-                                        </StackPanel>
-                                    </Border>
+                                                <Label Name="PART_ElemDevelopers" Content="{DynamicResource LOCDeveloperLabel}" />
+                                                <ItemsControl Name="PART_ItemsDevelopers" />
+
+                                                <Label Name="PART_ElemPublishers" Content="{DynamicResource LOCPublisherLabel}" />
+                                                <ItemsControl Name="PART_ItemsPublishers" />
+
+                                                <Label Name="PART_ElemGenres" Content="{DynamicResource LOCGenreLabel}" />
+                                                <ItemsControl Name="PART_ItemsGenres" />
+
+                                                <Label Name="PART_ElemSeries" Content="{DynamicResource LOCSeriesLabel}" />
+                                                <ItemsControl Name="PART_ItemsSeries" />
+
+                                                <Label Name="PART_ElemSource" Content="{DynamicResource LOCSourceLabel}" />
+                                                <Button Name="PART_ButtonSource" VerticalAlignment="Center" />
+
+                                                <Label Name="PART_ElemPlayTime" Content="{DynamicResource LOCTimePlayed}" />
+                                                <TextBlock Name="PART_TextPlayTime" VerticalAlignment="Center" />
+
+                                                <Label Name="PART_ElemLastPlayed" Content="{DynamicResource LOCLastPlayed}" />
+                                                <TextBlock Name="PART_TextLastActivity" VerticalAlignment="Center" />
+
+                                                <Label Name="PART_ElemCommunityScore" Content="{DynamicResource LOCCommunityScore}" />
+                                                <TextBlock Name="PART_TextCommunityScore" VerticalAlignment="Center"
+                                                           Style="{DynamicResource TextBlockGameScore}" />
+
+                                                <Label Name="PART_ElemCriticScore" Content="{DynamicResource LOCCriticScore}" />
+                                                <TextBlock Name="PART_TextCriticScore" VerticalAlignment="Center"
+                                                           Style="{DynamicResource TextBlockGameScore}" />
+                                            </GridEx>
+                                        </Grid>
+                                    </StackPanel>
+
+                                    <!-- ROW: HowLongToBeat (left, smaller) | Achievements (right) -->
+                                    <Grid Margin="0,22,0,0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="24" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+
+                                        <!-- HowLongToBeat card (compact) -->
+                                        <Border x:Name="HltbCard" Grid.Column="0" VerticalAlignment="Top"
+                                                MaxWidth="430"
+                                                Background="{DynamicResource DarkBackgroundBrush}"
+                                                BorderBrush="{DynamicResource DividerBrush}" BorderThickness="1"
+                                                CornerRadius="14" Padding="18,16">
+                                            <Border.Style>
+                                                <Style TargetType="Border">
+                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding ElementName=HltbMainStory, Path=Visibility}" Value="Visible">
+                                                            <Setter Property="Visibility" Value="Visible" />
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding ElementName=HltbMainExtra, Path=Visibility}" Value="Visible">
+                                                            <Setter Property="Visibility" Value="Visible" />
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding ElementName=HltbCompletionist, Path=Visibility}" Value="Visible">
+                                                            <Setter Property="Visibility" Value="Visible" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Border.Style>
+                                            <StackPanel>
+                                                <TextBlock Text="HOW LONG TO BEAT" FontFamily="{DynamicResource FontFamily}"
+                                                           FontWeight="Medium" FontSize="{DynamicResource FontSizeSmall}"
+                                                           Foreground="{DynamicResource TextBrushDarker}" />
+                                                <Grid Margin="0,14,0,0">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="8" />
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="8" />
+                                                        <ColumnDefinition Width="*" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <Grid.Resources>
+                                                        <Style x:Key="HltbTile" TargetType="Border">
+                                                            <Setter Property="Background" Value="{DynamicResource BackgroundBrush}" />
+                                                            <Setter Property="CornerRadius" Value="8" />
+                                                            <Setter Property="Padding" Value="8,10" />
+                                                        </Style>
+                                                        <Style x:Key="HltbIcon" TargetType="Path">
+                                                            <Setter Property="Width" Value="20" />
+                                                            <Setter Property="Height" Value="20" />
+                                                            <Setter Property="Stretch" Value="Uniform" />
+                                                            <Setter Property="Fill" Value="{DynamicResource TextBrushDarker}" />
+                                                            <Setter Property="HorizontalAlignment" Value="Center" />
+                                                            <Setter Property="Margin" Value="0,0,0,8" />
+                                                        </Style>
+                                                        <Style x:Key="HltbLabel" TargetType="TextBlock">
+                                                            <Setter Property="Foreground" Value="{DynamicResource TextBrushDarker}" />
+                                                            <Setter Property="HorizontalAlignment" Value="Center" />
+                                                            <Setter Property="Margin" Value="0,0,0,4" />
+                                                            <Setter Property="FontSize" Value="9" />
+                                                            <Setter Property="TextWrapping" Value="NoWrap" />
+                                                        </Style>
+                                                        <Style x:Key="HltbValue" TargetType="TextBlock">
+                                                            <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
+                                                            <Setter Property="FontSize" Value="16" />
+                                                            <Setter Property="FontWeight" Value="Bold" />
+                                                            <Setter Property="HorizontalAlignment" Value="Center" />
+                                                            <Setter Property="Visibility" Value="Visible" />
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding RelativeSource={RelativeSource Self}, Path=Text}" Value="-">
+                                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Grid.Resources>
+
+                                                    <Border Grid.Column="0" Style="{StaticResource HltbTile}">
+                                                        <StackPanel HorizontalAlignment="Center">
+                                                            <Path Style="{StaticResource HltbIcon}" Data="M18,2H6C4.9,2 4,2.9 4,4V20C4,21.1 4.9,22 6,22H18C19.1,22 20,21.1 20,20V4C20,2.9 19.1,2 18,2M18,20H6V4H7V12L10,9.5L13,12V4H18V20Z" />
+                                                            <TextBlock Text="MAIN STORY" Style="{StaticResource HltbLabel}" />
+                                                            <TextBlock x:Name="HltbMainStory" Style="{StaticResource HltbValue}"
+                                                                       Text="{PluginSettings Plugin=HowLongToBeat, Path=MainStoryFormat, FallbackValue='-'}" />
+                                                        </StackPanel>
+                                                    </Border>
+                                                    <Border Grid.Column="2" Style="{StaticResource HltbTile}">
+                                                        <StackPanel HorizontalAlignment="Center">
+                                                            <Path Style="{StaticResource HltbIcon}" Data="M3,5H21V7H3V5M3,11H21V13H3V11M3,17H15V19H3V17M19,15V19H17V21H19V23H21V21H23V19H21V15H19Z" />
+                                                            <TextBlock Text="MAIN + EXTRAS" Style="{StaticResource HltbLabel}" />
+                                                            <TextBlock x:Name="HltbMainExtra" Style="{StaticResource HltbValue}"
+                                                                       Text="{PluginSettings Plugin=HowLongToBeat, Path=MainExtraFormat, FallbackValue='-'}" />
+                                                        </StackPanel>
+                                                    </Border>
+                                                    <Border Grid.Column="4" Style="{StaticResource HltbTile}">
+                                                        <StackPanel HorizontalAlignment="Center">
+                                                            <Path Style="{StaticResource HltbIcon}" Data="M7,2H17V4H20V8C20,10.21 18.21,12 16,12C15.74,12 15.46,11.97 15.21,11.92C14.42,13.21 13.32,14.14 12,14.7V18H15V20H9V18H12V14.7C10.68,14.14 9.58,13.21 8.79,11.92C8.54,11.97 8.26,12 8,12C5.79,12 4,10.21 4,8V4H7V2M5,5V8C5,9.66 6.34,11 8,11C8.04,11 8.08,11 8.12,11C7.41,9.7 7,8.39 7,7V5H5M17,5V7C17,8.39 16.59,9.7 15.88,11C15.92,11 15.96,11 16,11C17.66,11 19,9.66 19,8V5H17Z" />
+                                                            <TextBlock Text="COMPLETIONIST" Style="{StaticResource HltbLabel}" />
+                                                            <TextBlock x:Name="HltbCompletionist" Style="{StaticResource HltbValue}"
+                                                                       Text="{PluginSettings Plugin=HowLongToBeat, Path=CompletionistFormat, FallbackValue='-'}" />
+                                                        </StackPanel>
+                                                    </Border>
+                                                </Grid>
+                                                <TextBlock Text="Provided by HowLongToBeat" Margin="0,12,0,0"
+                                                           FontSize="9" HorizontalAlignment="Center"
+                                                           Foreground="{DynamicResource TextBrushDarker}" Opacity="0.55" />
+                                            </StackPanel>
+                                        </Border>
+
+                                        <!-- Achievements card (right) -->
+                                        <Border Grid.Column="2" VerticalAlignment="Top"
+                                                Background="{DynamicResource DarkBackgroundBrush}"
+                                                BorderBrush="{DynamicResource DividerBrush}" BorderThickness="1"
+                                                CornerRadius="14" Padding="20,16">
+                                            <Border.Style>
+                                                <Style TargetType="Border">
+                                                    <Setter Property="Visibility" Value="Visible" />
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{PluginSettings Plugin=SuccessStory, Path=HasData, FallbackValue=False}" Value="False">
+                                                            <Setter Property="Visibility" Value="Collapsed" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Border.Style>
+                                            <StackPanel>
+                                                <TextBlock Text="{DynamicResource LOCSuccessStoryAchievements}"
+                                                           FontFamily="{DynamicResource FontFamily}" FontWeight="Medium"
+                                                           FontSize="{DynamicResource FontSizeSmall}"
+                                                           Foreground="{DynamicResource TextBrushDarker}" />
+                                                <ContentControl x:Name="SuccessStory_PluginCompactList" Margin="0,12,0,0"
+                                                                HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" />
+                                            </StackPanel>
+                                        </Border>
+                                    </Grid>
 
                                     <!-- Description -->
-                                    <StackPanel Name="PART_ElemDescription" Margin="0,18,0,0">
+                                    <StackPanel Name="PART_ElemDescription" Margin="0,22,0,0">
                                         <TextBlock Text="{DynamicResource LOCGameDescriptionTitle}" Margin="0,0,0,5"
                                                    Style="{DynamicResource BaseTextBlockStyle}" />
                                         <Separator Background="{DynamicResource PanelSeparatorBrush}" />
@@ -226,7 +309,7 @@
                                     </StackPanel>
 
                                     <!-- Notes -->
-                                    <StackPanel Name="PART_ElemNotes" Margin="0,18,0,0">
+                                    <StackPanel Name="PART_ElemNotes" Margin="0,18,0,18">
                                         <TextBlock Text="{DynamicResource LOCNotesLabel}" Margin="0,0,0,5"
                                                    Style="{DynamicResource BaseTextBlockStyle}" />
                                         <Separator Background="{DynamicResource PanelSeparatorBrush}" />
@@ -235,42 +318,6 @@
                                                  AcceptsReturn="True" TextWrapping="Wrap"
                                                  Margin="-1,8,-1,0" Padding="0"/>
                                     </StackPanel>
-
-                                    <!-- Underneath panel: Genres (left) | Achievements (right) -->
-                                    <Grid Margin="0,22,0,0">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="28" />
-                                            <ColumnDefinition Width="*" />
-                                        </Grid.ColumnDefinitions>
-
-                                        <!-- Genres -->
-                                        <StackPanel Grid.Column="0" Name="PART_ElemGenres" VerticalAlignment="Top">
-                                            <TextBlock Text="{DynamicResource LOCGenreLabel}" Margin="0,0,0,5"
-                                                       Style="{DynamicResource BaseTextBlockStyle}" />
-                                            <Separator Background="{DynamicResource PanelSeparatorBrush}" />
-                                            <ItemsControl Name="PART_ItemsGenres" Margin="0,8,0,0" />
-                                        </StackPanel>
-
-                                        <!-- Achievements (PlayniteAchievements via SuccessStory-compatible element) -->
-                                        <StackPanel Grid.Column="2" VerticalAlignment="Top">
-                                            <StackPanel.Style>
-                                                <Style TargetType="StackPanel">
-                                                    <Setter Property="Visibility" Value="Visible" />
-                                                    <Style.Triggers>
-                                                        <DataTrigger Binding="{PluginSettings Plugin=SuccessStory, Path=HasData, FallbackValue=False}" Value="False">
-                                                            <Setter Property="Visibility" Value="Collapsed" />
-                                                        </DataTrigger>
-                                                    </Style.Triggers>
-                                                </Style>
-                                            </StackPanel.Style>
-                                            <TextBlock Text="{DynamicResource LOCSuccessStoryAchievements}" Margin="0,0,0,5"
-                                                       Style="{DynamicResource BaseTextBlockStyle}" />
-                                            <Separator Background="{DynamicResource PanelSeparatorBrush}" />
-                                            <ContentControl x:Name="SuccessStory_PluginCompactList" Margin="0,8,0,0"
-                                                            HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" />
-                                        </StackPanel>
-                                    </Grid>
 
                                 </StackPanel>
                             </Grid>
