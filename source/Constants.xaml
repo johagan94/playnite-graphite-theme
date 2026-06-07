@@ -2,35 +2,73 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:sys="clr-namespace:System;assembly=mscorlib">
 
+    <!-- ============================================================
+         GRAPHITE — typography
+         Poppins (bundled, all weights) resolved via the Fonts folder.
+         ============================================================ -->
     <sys:Double x:Key="FontSizeSmall">12</sys:Double>
     <sys:Double x:Key="FontSize">14</sys:Double>
     <sys:Double x:Key="FontSizeLarge">15</sys:Double>
     <sys:Double x:Key="FontSizeLarger">20</sys:Double>
     <sys:Double x:Key="FontSizeLargest">29</sys:Double>
-    <FontFamily x:Key="FontFamily">Trebuchet MS</FontFamily>
+    <FontFamily x:Key="FontFamily">/Fonts/#Poppins</FontFamily>
     <FontFamily x:Key="MonospaceFontFamily">Consolas</FontFamily>
+
+    <!-- ============================================================
+         GRAPHITE — shape
+         Softer corners than stock Default (1px) for a modern surface look.
+         ============================================================ -->
     <Thickness x:Key="PopupBorderThickness">1</Thickness>
     <Thickness x:Key="ControlBorderThickness">1</Thickness>
     <sys:Double x:Key="EllipseBorderThickness">1</sys:Double>
-    <CornerRadius x:Key="ControlCornerRadius">1</CornerRadius>
+    <CornerRadius x:Key="ControlCornerRadius">4</CornerRadius>
     <Thickness x:Key="SidebarItemPadding">8</Thickness>
 
+    <!-- ============================================================
+         GRAPHITE — palette (Steam-esque grayscale + Material elevation)
+         Ported from the LaunchBox HLTB theme. These nine base colors are
+         the single source of truth; everything below maps onto them.
+         ============================================================ -->
+    <Color x:Key="BackgroundColor">#15171C</Color>        <!-- base surface -->
+    <Color x:Key="DarkBackgroundColor">#1B1D24</Color>    <!-- elevated surface / window -->
+    <Color x:Key="DarkerBackgroundColor">#0E1014</Color>  <!-- tooltip / popup / menus -->
+    <Color x:Key="ElevatedSurfaceColor">#252832</Color>   <!-- cards / controls -->
+    <Color x:Key="HoverSurfaceColor">#2E323D</Color>      <!-- interactive hover -->
+    <Color x:Key="DividerColor">#33363F</Color>           <!-- borders / dividers -->
+    <Color x:Key="LightForegroundColor">#E8E8E8</Color>   <!-- high-emphasis text (~87%) -->
+    <Color x:Key="DarkForegroundColor">#9A9CA3</Color>    <!-- medium-emphasis text (~60%) -->
+    <Color x:Key="AccentColor">#66C0F4</Color>            <!-- accent (Steam blue) -->
+
+    <!-- Graphite semantic brushes (used by custom views: HLTB card, explorer, etc.) -->
+    <SolidColorBrush x:Key="BackgroundBrush"       Color="{DynamicResource BackgroundColor}" />
+    <SolidColorBrush x:Key="DarkBackgroundBrush"   Color="{DynamicResource DarkBackgroundColor}" />
+    <SolidColorBrush x:Key="DarkerBackgroundBrush" Color="{DynamicResource DarkerBackgroundColor}" />
+    <SolidColorBrush x:Key="ElevatedSurfaceBrush"  Color="{DynamicResource ElevatedSurfaceColor}" />
+    <SolidColorBrush x:Key="HoverSurfaceBrush"     Color="{DynamicResource HoverSurfaceColor}" />
+    <SolidColorBrush x:Key="DividerBrush"          Color="{DynamicResource DividerColor}" />
+    <SolidColorBrush x:Key="AccentBrush"           Color="{DynamicResource AccentColor}" />
+
+    <!-- ============================================================
+         Playnite's stock color keys, retargeted onto the grayscale palette.
+         Keeping the original key names means all 100+ Default control/view
+         files recolor consistently with no further edits.
+         ============================================================ -->
     <Color x:Key="BlackColor">#FF000000</Color>
     <Color x:Key="WhiteColor">#FFFFFFFF</Color>
-    <Color x:Key="TextColor">#f2f2f2</Color>
-    <Color x:Key="TextColorDarker">#a3a3a3</Color>
+    <Color x:Key="TextColor">#E8E8E8</Color>
+    <Color x:Key="TextColorDarker">#9A9CA3</Color>
     <Color x:Key="TextColorDark">#FF000000</Color>
-    <Color x:Key="MainColor">#2C3A67</Color>
-    <Color x:Key="MainColorDark">#0D1225</Color>
-    <Color x:Key="HoverColor">#247BA0</Color>
-    <Color x:Key="GlyphColor">#55CDFF</Color>
-    <Color x:Key="HighlightGlyphColor">#8855CDFF</Color>
-    <Color x:Key="PopupBackgroundColor">#171e26</Color>
-    <Color x:Key="PopupBorderColor">#3e6184</Color>
-    <Color x:Key="BackgroundToneColor">#2C3A67</Color>
-    <Color x:Key="GridItemBackgroundColor">#151e3d</Color>
-    <Color x:Key="PanelSeparatorColor">#662C3A67</Color>
-    <Color x:Key="WindowPanelSeparatorColor">#3355CDFF</Color>
+    <Color x:Key="MainColor">#252832</Color>
+    <Color x:Key="MainColorDark">#15171C</Color>
+    <Color x:Key="HoverColor">#2E323D</Color>
+    <Color x:Key="GlyphColor">#66C0F4</Color>
+    <Color x:Key="HighlightGlyphColor">#8866C0F4</Color>
+    <Color x:Key="PopupBackgroundColor">#0E1014</Color>
+    <Color x:Key="PopupBorderColor">#33363F</Color>
+    <Color x:Key="BackgroundToneColor">#0E1014</Color>
+    <Color x:Key="GridItemBackgroundColor">#252832</Color>
+    <Color x:Key="PanelSeparatorColor">#6633363F</Color>
+    <Color x:Key="WindowPanelSeparatorColor">#4D33363F</Color>
     <Color x:Key="DataChangeNotifColor">#ffa500</Color>
 
     <SolidColorBrush x:Key="ControlBackgroundBrush" Color="Transparent" />
@@ -39,17 +77,17 @@
     <SolidColorBrush x:Key="TextBrushDark" Color="{DynamicResource TextColorDark}" />
     <SolidColorBrush x:Key="NormalBrush" Color="{DynamicResource MainColor}" />
     <SolidColorBrush x:Key="NormalBrushDark" Color="{DynamicResource MainColorDark}" />
-    <SolidColorBrush x:Key="NormalBorderBrush" Color="#5555CDFF" />
+    <SolidColorBrush x:Key="NormalBorderBrush" Color="{DynamicResource DividerColor}" />
     <SolidColorBrush x:Key="HoverBrush" Color="{DynamicResource HighlightGlyphColor}" />
     <SolidColorBrush x:Key="GlyphBrush" Color="{DynamicResource GlyphColor}" />
     <SolidColorBrush x:Key="HighlightGlyphBrush" Color="{DynamicResource HighlightGlyphColor}" />
     <SolidColorBrush x:Key="PopupBorderBrush" Color="{DynamicResource PopupBorderColor}" />
     <SolidColorBrush x:Key="TooltipBackgroundBrush" Color="{DynamicResource BackgroundToneColor}" />
-    <SolidColorBrush x:Key="ButtonBackgroundBrush" Color="#0a0e1e" />
+    <SolidColorBrush x:Key="ButtonBackgroundBrush" Color="{DynamicResource ElevatedSurfaceColor}" />
     <SolidColorBrush x:Key="GridItemBackgroundBrush" Color="{DynamicResource GridItemBackgroundColor}" />
     <SolidColorBrush x:Key="PanelSeparatorBrush" Color="{DynamicResource PanelSeparatorColor}" />
     <SolidColorBrush x:Key="WindowPanelSeparatorBrush" Color="{DynamicResource WindowPanelSeparatorColor}" />
-    <SolidColorBrush x:Key="PopupBackgroundBrush" Color="#1f2847" />
+    <SolidColorBrush x:Key="PopupBackgroundBrush" Color="{DynamicResource PopupBackgroundColor}" />
     <SolidColorBrush x:Key="CheckBoxCheckMarkBkBrush" Color="{DynamicResource MainColorDark}" />
     <SolidColorBrush x:Key="DataChangeNotifBrush" Color="{DynamicResource DataChangeNotifColor}" />
 
@@ -59,13 +97,16 @@
 
     <SolidColorBrush x:Key="WarningBrush" Color="#ff6b6b" />
 
+    <!-- Subtle grayscale tint for expander headers (was navy) -->
     <LinearGradientBrush x:Key="ExpanderBackgroundBrush" StartPoint="-0.1,0.5" EndPoint="1.2,1" >
-        <GradientStop Color="#FF2C3A67" Offset="0"/>
-        <GradientStop Color="#002C3A67" Offset="0.7"/>
+        <GradientStop Color="#FF2E323D" Offset="0"/>
+        <GradientStop Color="#002E323D" Offset="0.7"/>
     </LinearGradientBrush>
 
+    <!-- Main window background: gentle vertical grayscale (note: key name kept as-is;
+         it is referenced by name in Default views — do not rename) -->
     <LinearGradientBrush x:Key="WindowBackgourndBrush" StartPoint="0.5,-0.2" EndPoint="0.4,1" >
-        <GradientStop Color="#202b4d" Offset="0"/>
+        <GradientStop Color="#1B1D24" Offset="0"/>
         <GradientStop Color="{DynamicResource MainColorDark}" Offset="0.4"/>
     </LinearGradientBrush>
 </ResourceDictionary>

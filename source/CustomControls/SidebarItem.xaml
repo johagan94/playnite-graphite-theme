@@ -36,7 +36,7 @@
                 <Setter Property="BorderBrush" Value="{DynamicResource GlyphBrush}" />
             </DataTrigger>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="{DynamicResource HoverBrush}" />
+                <Setter Property="Background" Value="#1FFFFFFF" />
                 <Setter Property="BorderBrush" Value="{DynamicResource GlyphBrush}" />
             </Trigger>
             <DataTrigger Binding="{Settings SidebarPosition}" Value="Right">
