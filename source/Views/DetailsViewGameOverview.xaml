@@ -49,13 +49,16 @@
 
                             <Grid HorizontalAlignment="Stretch" Margin="40,0,40,40">
                                 <Grid.RowDefinitions>
-                                    <RowDefinition Height="300"/>
+                                    <RowDefinition Height="230"/>
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="*"/>
                                 </Grid.RowDefinitions>
 
                                 <!-- ============ HERO (lower, centered, over banner) ============ -->
                                 <StackPanel Grid.Row="1" HorizontalAlignment="Center" MaxWidth="1100" Margin="0,0,0,8">
+                                    <!-- No separate cover: in this library Cover often == Background, so a
+                                         cover blends into / duplicates the banner. Banner is the hero art.
+                                         (If covers are wanted, the reliable spot is a top-right corner.) -->
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                                         <Image Name="PART_ImageIcon" MaxHeight="40" MaxWidth="40"
                                                Margin="0,0,12,0" VerticalAlignment="Center"
@@ -184,45 +187,52 @@
                                                 <Grid>
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="*" />
-                                                        <ColumnDefinition Width="Auto" />
                                                         <ColumnDefinition Width="*" />
-                                                        <ColumnDefinition Width="Auto" />
                                                         <ColumnDefinition Width="*" />
                                                     </Grid.ColumnDefinitions>
                                                     <Grid.Resources>
                                                         <Style x:Key="HltbStat" TargetType="StackPanel"><Setter Property="HorizontalAlignment" Value="Center" /></Style>
+                                                        <Style x:Key="HltbIcon" TargetType="Path">
+                                                            <Setter Property="Width" Value="15" /><Setter Property="Height" Value="15" />
+                                                            <Setter Property="Stretch" Value="Uniform" /><Setter Property="Fill" Value="{DynamicResource TextBrushDarker}" />
+                                                            <Setter Property="VerticalAlignment" Value="Center" /><Setter Property="Margin" Value="0,0,6,0" />
+                                                        </Style>
                                                         <Style x:Key="HltbLabel" TargetType="TextBlock">
                                                             <Setter Property="Foreground" Value="{DynamicResource TextBrushDarker}" />
-                                                            <Setter Property="HorizontalAlignment" Value="Center" /><Setter Property="Margin" Value="0,0,0,6" />
+                                                            <Setter Property="VerticalAlignment" Value="Center" />
                                                             <Setter Property="FontSize" Value="9" /><Setter Property="TextWrapping" Value="NoWrap" />
                                                         </Style>
                                                         <Style x:Key="HltbValue" TargetType="TextBlock">
                                                             <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
                                                             <Setter Property="FontSize" Value="20" /><Setter Property="FontWeight" Value="Bold" />
-                                                            <Setter Property="HorizontalAlignment" Value="Center" /><Setter Property="Visibility" Value="Visible" />
+                                                            <Setter Property="HorizontalAlignment" Value="Center" /><Setter Property="Margin" Value="0,8,0,0" />
+                                                            <Setter Property="Visibility" Value="Visible" />
                                                             <Style.Triggers>
                                                                 <DataTrigger Binding="{Binding RelativeSource={RelativeSource Self}, Path=Text}" Value="-"><Setter Property="Visibility" Value="Collapsed" /></DataTrigger>
                                                             </Style.Triggers>
                                                         </Style>
-                                                        <Style x:Key="HltbRule" TargetType="Rectangle">
-                                                            <Setter Property="Width" Value="1" /><Setter Property="Fill" Value="{DynamicResource DividerBrush}" />
-                                                            <Setter Property="VerticalAlignment" Value="Stretch" /><Setter Property="Margin" Value="14,2" />
-                                                        </Style>
                                                     </Grid.Resources>
-                                                    <StackPanel Grid.Column="0" Style="{StaticResource HltbStat}">
-                                                        <TextBlock Text="MAIN STORY" Style="{StaticResource HltbLabel}" />
+                                                    <StackPanel Grid.Column="0" Style="{StaticResource HltbStat}" Visibility="{Binding ElementName=HltbMainStory, Path=Visibility}">
+                                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                                            <Path Style="{StaticResource HltbIcon}" Data="M18,2H6C4.9,2 4,2.9 4,4V20C4,21.1 4.9,22 6,22H18C19.1,22 20,21.1 20,20V4C20,2.9 19.1,2 18,2M18,20H6V4H7V12L10,9.5L13,12V4H18V20Z" />
+                                                            <TextBlock Text="MAIN STORY" Style="{StaticResource HltbLabel}" />
+                                                        </StackPanel>
                                                         <TextBlock x:Name="HltbMainStory" Style="{StaticResource HltbValue}"
                                                                    Text="{PluginSettings Plugin=HowLongToBeat, Path=MainStoryFormat, FallbackValue='-'}" />
                                                     </StackPanel>
-                                                    <Rectangle Grid.Column="1" Style="{StaticResource HltbRule}" />
-                                                    <StackPanel Grid.Column="2" Style="{StaticResource HltbStat}">
-                                                        <TextBlock Text="MAIN + EXTRAS" Style="{StaticResource HltbLabel}" />
+                                                    <StackPanel Grid.Column="1" Style="{StaticResource HltbStat}" Visibility="{Binding ElementName=HltbMainExtra, Path=Visibility}">
+                                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                                            <Path Style="{StaticResource HltbIcon}" Data="M3,5H21V7H3V5M3,11H21V13H3V11M3,17H15V19H3V17M19,15V19H17V21H19V23H21V21H23V19H21V15H19Z" />
+                                                            <TextBlock Text="MAIN + EXTRAS" Style="{StaticResource HltbLabel}" />
+                                                        </StackPanel>
                                                         <TextBlock x:Name="HltbMainExtra" Style="{StaticResource HltbValue}"
                                                                    Text="{PluginSettings Plugin=HowLongToBeat, Path=MainExtraFormat, FallbackValue='-'}" />
                                                     </StackPanel>
-                                                    <Rectangle Grid.Column="3" Style="{StaticResource HltbRule}" />
-                                                    <StackPanel Grid.Column="4" Style="{StaticResource HltbStat}">
-                                                        <TextBlock Text="COMPLETIONIST" Style="{StaticResource HltbLabel}" />
+                                                    <StackPanel Grid.Column="2" Style="{StaticResource HltbStat}" Visibility="{Binding ElementName=HltbCompletionist, Path=Visibility}">
+                                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                                            <Path Style="{StaticResource HltbIcon}" Data="M7,2H17V4H20V8C20,10.21 18.21,12 16,12C15.74,12 15.46,11.97 15.21,11.92C14.42,13.21 13.32,14.14 12,14.7V18H15V20H9V18H12V14.7C10.68,14.14 9.58,13.21 8.79,11.92C8.54,11.97 8.26,12 8,12C5.79,12 4,10.21 4,8V4H7V2M5,5V8C5,9.66 6.34,11 8,11C8.04,11 8.08,11 8.12,11C7.41,9.7 7,8.39 7,7V5H5M17,5V7C17,8.39 16.59,9.7 15.88,11C15.92,11 15.96,11 16,11C17.66,11 19,9.66 19,8V5H17Z" />
+                                                            <TextBlock Text="COMPLETIONIST" Style="{StaticResource HltbLabel}" />
+                                                        </StackPanel>
                                                         <TextBlock x:Name="HltbCompletionist" Style="{StaticResource HltbValue}"
                                                                    Text="{PluginSettings Plugin=HowLongToBeat, Path=CompletionistFormat, FallbackValue='-'}" />
                                                     </StackPanel>
