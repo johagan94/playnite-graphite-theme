@@ -5,16 +5,18 @@
                     mc:Ignorable="d">
 
     <!-- ================================================================
-         GRAPHITE - Details view (prototype v2)
+         GRAPHITE - Details view (prototype v3)
          Order:
-           Header  : cover (right) + title / meta line / action buttons
-           DETAILS : metadata block (above the HLTB grid)
-           ROW     : HowLongToBeat card (left, smaller) | Achievements card (right)
-           Description (+ Notes)
+           Header      : cover (right) + title / meta line / action buttons
+           Description  (above)
+           ROW          : Details | HowLongToBeat | Achievements (share the width)
+           Notes
          Bindings:
            HLTB         -> {PluginSettings Plugin=HowLongToBeat, Path=*Format}
            Achievements -> SuccessStory_PluginCompactList (PlayniteAchievements
-                           is a drop-in SuccessStory replacement)
+                           serves the legacy SuccessStory element names). Card is
+                           gated on the ContentControl's HasContent so it shows
+                           only when the plugin actually injects achievement data.
          ================================================================ -->
 
     <Style TargetType="{x:Type DetailsViewGameOverview}">
@@ -29,7 +31,6 @@
                                   d:DataContext="{x:Static DesignMainViewModel.DesignSelectedGameDetailsIntance}"
                                   x:Name="PART_ScrollViewHost">
                         <Grid>
-                            <!-- Background banner -->
                             <FadeImage x:Name="PART_ImageBackground" Stretch="UniformToFill"
                                        HorizontalAlignment="Center" VerticalAlignment="Top">
                                 <FadeImage.ImageOpacityMask>
@@ -50,7 +51,7 @@
                                 </Grid.RowDefinitions>
 
                                 <!-- ============ HEADER ============ -->
-                                <DockPanel Grid.Row="1" Margin="0,20,0,18" MaxWidth="1200"
+                                <DockPanel Grid.Row="1" Margin="0,20,0,18" MaxWidth="1500"
                                            Background="Transparent">
                                     <Image Name="PART_ImageCover" VerticalAlignment="Bottom"
                                            DockPanel.Dock="Right" Margin="24,0,0,0"
@@ -74,7 +75,6 @@
                                             </TextBlock>
                                         </DockPanel>
 
-                                        <!-- Quick-glance meta line (platform / release / completion) -->
                                         <WrapPanel Margin="0,12,0,0">
                                             <WrapPanel.Resources>
                                                 <Style TargetType="Button" BasedOn="{StaticResource PropertyItemButton}" />
@@ -104,16 +104,40 @@
                                 </DockPanel>
 
                                 <!-- ============ CONTENT ============ -->
-                                <StackPanel Grid.Row="2" MaxWidth="1200" Margin="0,8,0,0"
+                                <StackPanel Grid.Row="2" MaxWidth="1500" Margin="0,8,0,0"
                                             HorizontalAlignment="Stretch">
 
-                                    <!-- DETAILS (metadata, above the HLTB grid) -->
-                                    <StackPanel Margin="0,4,0,0">
-                                        <TextBlock Text="{DynamicResource LOCGameDetails}" Margin="0,0,0,5"
+                                    <!-- Description (above the Details / HLTB / Achievements row) -->
+                                    <StackPanel Name="PART_ElemDescription">
+                                        <TextBlock Text="{DynamicResource LOCGameDescriptionTitle}" Margin="0,0,0,5"
                                                    Style="{DynamicResource BaseTextBlockStyle}" />
                                         <Separator Background="{DynamicResource PanelSeparatorBrush}" />
-                                        <Grid HorizontalAlignment="Left" MaxWidth="700" Margin="0,8,0,0">
-                                            <GridEx ColumnCount="2" StarColumns="1" RowCount="9" AutoLayoutColumns="2">
+                                        <HtmlTextView Name="PART_HtmlDescription"
+                                                      Margin="0,8,0,0"
+                                                      HtmlFontSize="{DynamicResource FontSize}"
+                                                      HtmlFontFamily="{DynamicResource FontFamily}"
+                                                      HtmlForeground="{DynamicResource TextColor}"
+                                                      LinkForeground="{DynamicResource GlyphColor}"
+                                                      ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                                      ScrollViewer.VerticalScrollBarVisibility="Disabled"/>
+                                    </StackPanel>
+
+                                    <!-- ROW: Details | HowLongToBeat | Achievements -->
+                                    <Grid Margin="0,22,0,0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" MinWidth="280" />
+                                            <ColumnDefinition Width="28" />
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="28" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+
+                                        <!-- Details (metadata) -->
+                                        <StackPanel Grid.Column="0" VerticalAlignment="Top">
+                                            <TextBlock Text="{DynamicResource LOCGameDetails}" Margin="0,0,0,5"
+                                                       Style="{DynamicResource BaseTextBlockStyle}" />
+                                            <Separator Background="{DynamicResource PanelSeparatorBrush}" />
+                                            <GridEx ColumnCount="2" StarColumns="1" RowCount="9" AutoLayoutColumns="2" Margin="0,8,0,0">
                                                 <Grid.Resources>
                                                     <Style TargetType="TextBlock" BasedOn="{StaticResource BaseTextBlockStyle}" />
                                                     <Style TargetType="Label" BasedOn="{StaticResource {x:Type Label}}">
@@ -156,20 +180,11 @@
                                                 <TextBlock Name="PART_TextCriticScore" VerticalAlignment="Center"
                                                            Style="{DynamicResource TextBlockGameScore}" />
                                             </GridEx>
-                                        </Grid>
-                                    </StackPanel>
-
-                                    <!-- ROW: HowLongToBeat (left, smaller) | Achievements (right) -->
-                                    <Grid Margin="0,22,0,0">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="Auto" />
-                                            <ColumnDefinition Width="24" />
-                                            <ColumnDefinition Width="*" />
-                                        </Grid.ColumnDefinitions>
+                                        </StackPanel>
 
                                         <!-- HowLongToBeat card (compact) -->
-                                        <Border x:Name="HltbCard" Grid.Column="0" VerticalAlignment="Top"
-                                                MaxWidth="430"
+                                        <Border x:Name="HltbCard" Grid.Column="2" VerticalAlignment="Top"
+                                                MaxWidth="440"
                                                 Background="{DynamicResource DarkBackgroundBrush}"
                                                 BorderBrush="{DynamicResource DividerBrush}" BorderThickness="1"
                                                 CornerRadius="14" Padding="18,16">
@@ -267,17 +282,21 @@
                                             </StackPanel>
                                         </Border>
 
-                                        <!-- Achievements card (right) -->
-                                        <Border Grid.Column="2" VerticalAlignment="Top"
+                                        <!-- Achievements card (fills remaining width); shown only when the
+                                             hosted plugin control actually has content -->
+                                        <Border Grid.Column="4" VerticalAlignment="Top"
                                                 Background="{DynamicResource DarkBackgroundBrush}"
                                                 BorderBrush="{DynamicResource DividerBrush}" BorderThickness="1"
                                                 CornerRadius="14" Padding="20,16">
                                             <Border.Style>
                                                 <Style TargetType="Border">
-                                                    <Setter Property="Visibility" Value="Visible" />
+                                                    <Setter Property="Visibility" Value="Collapsed" />
                                                     <Style.Triggers>
-                                                        <DataTrigger Binding="{PluginSettings Plugin=SuccessStory, Path=HasData, FallbackValue=False}" Value="False">
-                                                            <Setter Property="Visibility" Value="Collapsed" />
+                                                        <DataTrigger Binding="{PluginSettings Plugin=PlayniteAchievements, Path=HasData, FallbackValue=False}" Value="True">
+                                                            <Setter Property="Visibility" Value="Visible" />
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding ElementName=PlayniteAchievements_PluginCompactList, Path=HasContent}" Value="True">
+                                                            <Setter Property="Visibility" Value="Visible" />
                                                         </DataTrigger>
                                                     </Style.Triggers>
                                                 </Style>
@@ -287,29 +306,14 @@
                                                            FontFamily="{DynamicResource FontFamily}" FontWeight="Medium"
                                                            FontSize="{DynamicResource FontSizeSmall}"
                                                            Foreground="{DynamicResource TextBrushDarker}" />
-                                                <ContentControl x:Name="SuccessStory_PluginCompactList" Margin="0,12,0,0"
+                                                <ContentControl x:Name="PlayniteAchievements_PluginCompactList" Margin="0,12,0,0"
                                                                 HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" />
                                             </StackPanel>
                                         </Border>
                                     </Grid>
 
-                                    <!-- Description -->
-                                    <StackPanel Name="PART_ElemDescription" Margin="0,22,0,0">
-                                        <TextBlock Text="{DynamicResource LOCGameDescriptionTitle}" Margin="0,0,0,5"
-                                                   Style="{DynamicResource BaseTextBlockStyle}" />
-                                        <Separator Background="{DynamicResource PanelSeparatorBrush}" />
-                                        <HtmlTextView Name="PART_HtmlDescription"
-                                                      Margin="0,8,0,0"
-                                                      HtmlFontSize="{DynamicResource FontSize}"
-                                                      HtmlFontFamily="{DynamicResource FontFamily}"
-                                                      HtmlForeground="{DynamicResource TextColor}"
-                                                      LinkForeground="{DynamicResource GlyphColor}"
-                                                      ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                                                      ScrollViewer.VerticalScrollBarVisibility="Disabled"/>
-                                    </StackPanel>
-
                                     <!-- Notes -->
-                                    <StackPanel Name="PART_ElemNotes" Margin="0,18,0,18">
+                                    <StackPanel Name="PART_ElemNotes" Margin="0,22,0,18">
                                         <TextBlock Text="{DynamicResource LOCNotesLabel}" Margin="0,0,0,5"
                                                    Style="{DynamicResource BaseTextBlockStyle}" />
                                         <Separator Background="{DynamicResource PanelSeparatorBrush}" />
