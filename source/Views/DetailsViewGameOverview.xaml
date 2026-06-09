@@ -57,9 +57,11 @@
                                                     HorizontalAlignment="Center" VerticalAlignment="Bottom"
                                                     MaxHeight="130" MaxWidth="640" Margin="0,0,0,2"
                                                     Visibility="{PluginSettings Plugin=ExtraMetadataLoader, Path=IsLogoAvailable, FallbackValue=Collapsed, Converter={StaticResource BooleanToVisibilityConverter}}" />
-                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                        <StackPanel.Style>
-                                            <Style TargetType="StackPanel">
+                                    <!-- Title block wrapped so a soft radial scrim can sit behind the text for
+                                         legibility over busy box art; whole block collapses when a clear logo is shown. -->
+                                    <Grid HorizontalAlignment="Center">
+                                        <Grid.Style>
+                                            <Style TargetType="Grid">
                                                 <Setter Property="Visibility" Value="Visible" />
                                                 <Style.Triggers>
                                                     <DataTrigger Binding="{PluginSettings Plugin=ExtraMetadataLoader, Path=IsLogoAvailable, FallbackValue=False}" Value="True">
@@ -67,19 +69,30 @@
                                                     </DataTrigger>
                                                 </Style.Triggers>
                                             </Style>
-                                        </StackPanel.Style>
-                                        <Image Name="PART_ImageIcon" MaxHeight="40" MaxWidth="40"
-                                               Margin="0,0,12,0" VerticalAlignment="Center"
-                                               RenderOptions.BitmapScalingMode="Fant" />
-                                        <TextBlock Name="PART_TextDisplayName" FontFamily="{DynamicResource FontFamily}"
-                                                   FontWeight="Bold" FontSize="{DynamicResource FontSizeLargest}"
-                                                   TextAlignment="Center" TextWrapping="Wrap" VerticalAlignment="Center"
-                                                   Foreground="{DynamicResource TextBrush}">
-                                            <TextBlock.Effect>
-                                                <DropShadowEffect ShadowDepth="2" BlurRadius="12" Opacity="0.8" RenderingBias="Quality"/>
-                                            </TextBlock.Effect>
-                                        </TextBlock>
-                                    </StackPanel>
+                                        </Grid.Style>
+                                        <Rectangle IsHitTestVisible="False" Margin="-60,-22,-60,-18">
+                                            <Rectangle.Fill>
+                                                <RadialGradientBrush GradientOrigin="0.5,0.5" Center="0.5,0.5" RadiusX="0.62" RadiusY="0.72">
+                                                    <GradientStop Color="#A6000000" Offset="0.0" />
+                                                    <GradientStop Color="#4D000000" Offset="0.55" />
+                                                    <GradientStop Color="#00000000" Offset="1.0" />
+                                                </RadialGradientBrush>
+                                            </Rectangle.Fill>
+                                        </Rectangle>
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                            <Image Name="PART_ImageIcon" MaxHeight="40" MaxWidth="40"
+                                                   Margin="0,0,12,0" VerticalAlignment="Center"
+                                                   RenderOptions.BitmapScalingMode="Fant" />
+                                            <TextBlock Name="PART_TextDisplayName" FontFamily="{DynamicResource FontFamily}"
+                                                       FontWeight="Bold" FontSize="{DynamicResource FontSizeLargest}"
+                                                       TextAlignment="Center" TextWrapping="Wrap" VerticalAlignment="Center"
+                                                       Foreground="{DynamicResource TextBrush}">
+                                                <TextBlock.Effect>
+                                                    <DropShadowEffect ShadowDepth="0" BlurRadius="14" Opacity="0.85" RenderingBias="Quality"/>
+                                                </TextBlock.Effect>
+                                            </TextBlock>
+                                        </StackPanel>
+                                    </Grid>
 
                                     <WrapPanel HorizontalAlignment="Center" Margin="0,12,0,0">
                                         <WrapPanel.Resources>
