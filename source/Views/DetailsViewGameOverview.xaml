@@ -303,9 +303,10 @@
                                                     <!-- Virtualized ~8-wide badge grid: only on-screen badges render, which fixes the
                                                          "render every badge on each game-select" perf hit. Bounded to ~3 rows, scroll for more.
                                                          Uses the achievements plugin's bundled VirtualizingWrapPanel. -->
-                                                    <!-- Path=AchievementsOldestFirst = chronological by unlock (first achievement acquired first).
-                                                         These Modern-Bindings lists are FIXED orders; the plugin's settings-window sort does NOT reach them. -->
-                                                    <ListBox ItemsSource="{PluginSettings Plugin=PlayniteAchievements, Path=AchievementsOldestFirst}"
+                                                    <!-- Path=AchievementDefaultOrder = the provider's natural order (the sequence achievements are
+                                                         defined in). Unlock-time sorts only reorder UNLOCKED items, so on 0%-complete games they look
+                                                         unsorted; provider order reads intentional on every game. -->
+                                                    <ListBox ItemsSource="{PluginSettings Plugin=PlayniteAchievements, Path=AchievementDefaultOrder}"
                                                              MaxHeight="172" BorderThickness="0" Background="Transparent" Padding="0"
                                                              ScrollViewer.CanContentScroll="True"
                                                              ScrollViewer.VerticalScrollBarVisibility="Auto"
