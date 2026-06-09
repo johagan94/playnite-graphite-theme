@@ -122,9 +122,9 @@
                                     <Border.Resources>
                                         <Style x:Key="ModuleHeader" TargetType="TextBlock">
                                             <Setter Property="FontFamily" Value="{DynamicResource FontFamily}" />
-                                            <Setter Property="FontWeight" Value="Medium" />
+                                            <Setter Property="FontWeight" Value="SemiBold" />
                                             <Setter Property="FontSize" Value="{DynamicResource FontSizeSmall}" />
-                                            <Setter Property="Foreground" Value="{DynamicResource TextBrushDarker}" />
+                                            <Setter Property="Foreground" Value="#C8CAD0" />
                                             <Setter Property="Margin" Value="0,0,0,16" />
                                         </Style>
                                         <!-- Recessed module panel: a darker inset card on the elevated panel,
