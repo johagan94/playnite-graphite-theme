@@ -216,8 +216,9 @@
                                             <StackPanel x:Name="HltbSection" VerticalAlignment="Center">
                                                 <TextBlock Text="HOW LONG TO BEAT" Style="{StaticResource ModuleHeader}" />
                                                 <!-- Helium-style HLTB progress bar, hosted with a graphite rounded track -->
+                                                <!-- Near-black recessed track; the plugin renders the light->dim time segments on top. -->
                                                 <Border CornerRadius="4" ClipToBounds="True" Height="20" Margin="0,0,0,16"
-                                                        Background="{DynamicResource BackgroundBrush}">
+                                                        Background="#0E1014">
                                                     <ContentControl x:Name="HowLongToBeat_PluginProgressBar"
                                                                     HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
                                                 </Border>
