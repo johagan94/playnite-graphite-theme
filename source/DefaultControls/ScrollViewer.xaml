@@ -20,6 +20,27 @@
         </Setter>
     </Style>
 
+    <!-- Slim semi-transparent pill thumb (replaces the default light WPF Thumb) for the dark theme. -->
+    <Style x:Key="ScrollBarThumb" TargetType="{x:Type Thumb}">
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="IsTabStop" Value="False" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Thumb}">
+                    <Border x:Name="ThumbBorder" CornerRadius="4" Background="#4DFFFFFF" />
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="ThumbBorder" Property="Background" Value="#80FFFFFF" />
+                        </Trigger>
+                        <Trigger Property="IsDragging" Value="True">
+                            <Setter TargetName="ThumbBorder" Property="Background" Value="#A6FFFFFF" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <Style TargetType="{x:Type ScrollBar}">
         <Setter Property="Stylus.IsFlicksEnabled" Value="False" />
         <Setter Property="Background" Value="{DynamicResource ControlBackgroundBrush}" />
@@ -32,7 +53,7 @@
                             <sys:Double x:Key="{x:Static SystemParameters.VerticalScrollBarButtonHeightKey}">42</sys:Double>
                         </Track.Resources>
                         <Track.Thumb>
-                            <Thumb Width="8" />
+                            <Thumb Width="8" Style="{DynamicResource ScrollBarThumb}" />
                         </Track.Thumb>
                         <Track.DecreaseRepeatButton>
                             <RepeatButton x:Name="UpButton" Style="{DynamicResource ScrollBarTrackButton}"
