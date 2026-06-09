@@ -166,7 +166,7 @@
 
                                             <!-- Details -->
                                             <Border Grid.Column="0" Style="{StaticResource ModuleCard}">
-                                            <StackPanel VerticalAlignment="Top">
+                                            <StackPanel VerticalAlignment="Center">
                                                 <TextBlock Text="DETAILS" Style="{StaticResource ModuleHeader}" />
                                                 <GridEx ColumnCount="2" StarColumns="1" RowCount="9" AutoLayoutColumns="2">
                                                     <Grid.Resources>
@@ -213,7 +213,7 @@
                                                         </Style.Triggers>
                                                     </Style>
                                                 </Border.Style>
-                                            <StackPanel x:Name="HltbSection" VerticalAlignment="Top">
+                                            <StackPanel x:Name="HltbSection" VerticalAlignment="Center">
                                                 <TextBlock Text="HOW LONG TO BEAT" Style="{StaticResource ModuleHeader}" />
                                                 <!-- Helium-style HLTB progress bar, hosted with a graphite rounded track -->
                                                 <Border CornerRadius="4" ClipToBounds="True" Height="20" Margin="0,0,0,16"
