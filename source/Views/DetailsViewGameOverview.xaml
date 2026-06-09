@@ -31,8 +31,8 @@
                             <!-- Opacity mask removed for perf: an opacity mask forces an extra offscreen render
                                  surface every frame; the scrim Rectangle below already fades the banner to base. -->
                             <FadeImage x:Name="PART_ImageBackground" Stretch="UniformToFill"
-                                       HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="440" />
-                            <Rectangle VerticalAlignment="Top" Height="440" IsHitTestVisible="False">
+                                       HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="580" />
+                            <Rectangle VerticalAlignment="Top" Height="580" IsHitTestVisible="False">
                                 <Rectangle.Fill>
                                     <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
                                         <GradientStop Color="#0015171C" Offset="0.0" />
@@ -44,7 +44,7 @@
 
                             <Grid HorizontalAlignment="Stretch" Margin="40,0,40,40">
                                 <Grid.RowDefinitions>
-                                    <RowDefinition Height="230"/>
+                                    <RowDefinition Height="320"/>
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="*"/>
                                 </Grid.RowDefinitions>
