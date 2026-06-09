@@ -15,7 +15,7 @@
                             x:Name="BorderContentHolder" Margin="{TemplateBinding Padding}">
                         <DockPanel x:Name="DockContentHolder" LastChildFill="True">
                             <Border x:Name="PART_ElemMainMenu" Background="Transparent"
-                                    Width="40" Height="40" Margin="6,2,4,2"
+                                    Width="40" Height="40" Margin="6,1,4,1" VerticalAlignment="Center"
                                     DockPanel.Dock="Left" Padding="5" Cursor="Hand"
                                     WindowChrome.IsHitTestVisibleInChrome="True">
                                 <Image Source="{ThemeFile 'Images/applogo_dark.png'}"
@@ -23,8 +23,8 @@
                             </Border>
                             <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled"
                                           DockPanel.Dock="Left" CanContentScroll="True"
-                                          Margin="0,0,100,0" x:Name="ScrollSidebarItems">
-                                <StackPanel x:Name="PART_PanelSideBarItems" Orientation="Horizontal" />
+                                          Margin="0,0,4,0" VerticalAlignment="Center" x:Name="ScrollSidebarItems">
+                                <StackPanel x:Name="PART_PanelSideBarItems" Orientation="Horizontal" VerticalAlignment="Center" />
                             </ScrollViewer>
                         </DockPanel>
                     </Border>

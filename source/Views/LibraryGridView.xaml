@@ -22,6 +22,10 @@
                             <ExtendedListBox x:Name="PART_ListGames" Padding="5"
                                              ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                                              ScrollViewer.PanningMode="VerticalOnly"
+                                             ScrollViewer.CanContentScroll="True"
+                                             VirtualizingPanel.IsVirtualizing="True"
+                                             VirtualizingPanel.VirtualizationMode="Recycling"
+                                             VirtualizingPanel.IsVirtualizingWhenGrouping="True"
                                              ItemContainerStyle="{DynamicResource GridViewItemStyle}"
                                              DockPanel.Dock="Left"
                                              BorderThickness="0">

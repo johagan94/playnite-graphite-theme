@@ -11,3 +11,6 @@ obj/
 # OS cruft
 Thumbs.db
 desktop.ini
+
+# Internal planning notes (kept local, not shared)
+ANALYSIS.md

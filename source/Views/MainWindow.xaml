@@ -36,12 +36,12 @@
                                 </Storyboard>
                             </Grid.Resources>
                             
-                            <DockPanel>
-                                <Sidebar x:Name="PART_Sidebar" Panel.ZIndex="999"
-                                         DockPanel.Dock="Top" />                             
-                                <ContentControl Name="PART_ContentView"
-                                                DockPanel.Dock="Top" />
-                            </DockPanel>                            
+                            <!-- Content fills the window; the rail OVERLAYS the top-left so it shares ONE
+                                 row with the TopPanel toolbar (which is left-margined to clear the rail width). -->
+                            <ContentControl Name="PART_ContentView" />
+                            <Sidebar x:Name="PART_Sidebar" Panel.ZIndex="999"
+                                     VerticalAlignment="Top" HorizontalAlignment="Left"
+                                     Width="300" Height="42" />
                             <NotificationPanel x:Name="PART_Notifications"  
                                                WindowChrome.IsHitTestVisibleInChrome="True"
                                                Width="260"

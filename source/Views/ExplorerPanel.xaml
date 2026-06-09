@@ -37,10 +37,10 @@
                                 <Condition Property="IsMouseOver" Value="True" />
                                 <Condition Property="Selector.IsSelected" Value="False" />
                             </MultiTrigger.Conditions>
-                            <Setter TargetName="Bg" Property="Background" Value="#14FFFFFF" />
+                            <Setter TargetName="Bg" Property="Background" Value="#2E000000" />
                         </MultiTrigger>
                         <Trigger Property="IsSelected" Value="True">
-                            <Setter TargetName="Bg" Property="Background" Value="#1FFFFFFF" />
+                            <Setter TargetName="Bg" Property="Background" Value="#59000000" />
                             <Setter TargetName="AccentBar" Property="Visibility" Value="Visible" />
                         </Trigger>
                     </ControlTemplate.Triggers>

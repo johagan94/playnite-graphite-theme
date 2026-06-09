@@ -2,6 +2,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                    xmlns:vwp="clr-namespace:WpfToolkit.Controls;assembly=VirtualizingWrapPanel"
                     mc:Ignorable="d">
 
     <!-- ================================================================
@@ -27,16 +28,10 @@
                                   x:Name="PART_ScrollViewHost">
                         <Grid Background="{DynamicResource BackgroundBrush}">
                             <!-- Banner hero band: fills the full width, fades to base -->
+                            <!-- Opacity mask removed for perf: an opacity mask forces an extra offscreen render
+                                 surface every frame; the scrim Rectangle below already fades the banner to base. -->
                             <FadeImage x:Name="PART_ImageBackground" Stretch="UniformToFill"
-                                       HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="440">
-                                <FadeImage.ImageOpacityMask>
-                                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                                        <GradientStop Color="Black" Offset="0.0" />
-                                        <GradientStop Color="Black" Offset="0.4" />
-                                        <GradientStop Color="Transparent" Offset="1.0" />
-                                    </LinearGradientBrush>
-                                </FadeImage.ImageOpacityMask>
-                            </FadeImage>
+                                       HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="440" />
                             <Rectangle VerticalAlignment="Top" Height="440" IsHitTestVisible="False">
                                 <Rectangle.Fill>
                                     <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
@@ -56,10 +51,23 @@
 
                                 <!-- ============ HERO (lower, centered, over banner) ============ -->
                                 <StackPanel Grid.Row="1" HorizontalAlignment="Center" MaxWidth="1100" Margin="0,0,0,8">
-                                    <!-- No separate cover: in this library Cover often == Background, so a
-                                         cover blends into / duplicates the banner. Banner is the hero art.
-                                         (If covers are wanted, the reliable spot is a top-right corner.) -->
+                                    <!-- Clear logo (ExtraMetadataLoader) when available; falls back to the text title below.
+                                         No separate cover: in this library Cover often == Background (duplicates the banner). -->
+                                    <ContentControl x:Name="ExtraMetadataLoader_LogoLoaderControl"
+                                                    HorizontalAlignment="Center" VerticalAlignment="Bottom"
+                                                    MaxHeight="130" MaxWidth="640" Margin="0,0,0,2"
+                                                    Visibility="{PluginSettings Plugin=ExtraMetadataLoader, Path=IsLogoAvailable, FallbackValue=Collapsed, Converter={StaticResource BooleanToVisibilityConverter}}" />
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <StackPanel.Style>
+                                            <Style TargetType="StackPanel">
+                                                <Setter Property="Visibility" Value="Visible" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{PluginSettings Plugin=ExtraMetadataLoader, Path=IsLogoAvailable, FallbackValue=False}" Value="True">
+                                                        <Setter Property="Visibility" Value="Collapsed" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </StackPanel.Style>
                                         <Image Name="PART_ImageIcon" MaxHeight="40" MaxWidth="40"
                                                Margin="0,0,12,0" VerticalAlignment="Center"
                                                RenderOptions.BitmapScalingMode="Fant" />
@@ -106,6 +114,17 @@
                                             <Setter Property="Foreground" Value="{DynamicResource TextBrushDarker}" />
                                             <Setter Property="Margin" Value="0,0,0,16" />
                                         </Style>
+                                        <!-- Recessed module panel: a darker inset card on the elevated panel,
+                                             so Details / HowLongToBeat / Achievements each read as their own panel. -->
+                                        <Style x:Key="ModuleCard" TargetType="Border">
+                                            <Setter Property="Background" Value="{DynamicResource BackgroundBrush}" />
+                                            <Setter Property="BorderBrush" Value="{DynamicResource DividerBrush}" />
+                                            <Setter Property="BorderThickness" Value="1" />
+                                            <Setter Property="CornerRadius" Value="8" />
+                                            <Setter Property="Padding" Value="20,18" />
+                                            <Setter Property="ClipToBounds" Value="True" />
+                                            <Setter Property="VerticalAlignment" Value="Stretch" />
+                                        </Style>
                                     </Border.Resources>
                                     <StackPanel>
                                         <!-- Description -->
@@ -122,18 +141,19 @@
 
                                         <Rectangle Height="1" Fill="{DynamicResource DividerBrush}" />
 
-                                        <!-- 3 even modules -->
-                                        <Grid>
+                                        <!-- ===== THREE MODULE PANELS (recessed cards) ===== -->
+                                        <Grid Margin="22,8,22,8">
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="*" />
-                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="14" />
                                                 <ColumnDefinition Width="*" />
-                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="14" />
                                                 <ColumnDefinition Width="*" />
                                             </Grid.ColumnDefinitions>
 
                                             <!-- Details -->
-                                            <StackPanel Grid.Column="0" Margin="26,22" VerticalAlignment="Top">
+                                            <Border Grid.Column="0" Style="{StaticResource ModuleCard}">
+                                            <StackPanel VerticalAlignment="Top">
                                                 <TextBlock Text="DETAILS" Style="{StaticResource ModuleHeader}" />
                                                 <GridEx ColumnCount="2" StarColumns="1" RowCount="9" AutoLayoutColumns="2">
                                                     <Grid.Resources>
@@ -166,15 +186,12 @@
                                                     <TextBlock Name="PART_TextCriticScore" VerticalAlignment="Center" Style="{DynamicResource TextBlockGameScore}" />
                                                 </GridEx>
                                             </StackPanel>
+                                            </Border>
 
-                                            <Rectangle Grid.Column="1" Width="1" Fill="{DynamicResource DividerBrush}"
-                                                       VerticalAlignment="Stretch" Margin="0,16"
-                                                       Visibility="{Binding ElementName=HltbSection, Path=Visibility}" />
-
-                                            <!-- HowLongToBeat (flat 3-up, no boxes) -->
-                                            <StackPanel x:Name="HltbSection" Grid.Column="2" Margin="26,22" VerticalAlignment="Top">
-                                                <StackPanel.Style>
-                                                    <Style TargetType="StackPanel">
+                                            <!-- HowLongToBeat (RIGHT): graphite progress bar + flat 3-up times -->
+                                            <Border Grid.Column="4">
+                                                <Border.Style>
+                                                    <Style TargetType="Border" BasedOn="{StaticResource ModuleCard}">
                                                         <Setter Property="Visibility" Value="Collapsed" />
                                                         <Style.Triggers>
                                                             <DataTrigger Binding="{Binding ElementName=HltbMainStory, Path=Visibility}" Value="Visible"><Setter Property="Visibility" Value="Visible" /></DataTrigger>
@@ -182,8 +199,15 @@
                                                             <DataTrigger Binding="{Binding ElementName=HltbCompletionist, Path=Visibility}" Value="Visible"><Setter Property="Visibility" Value="Visible" /></DataTrigger>
                                                         </Style.Triggers>
                                                     </Style>
-                                                </StackPanel.Style>
+                                                </Border.Style>
+                                            <StackPanel x:Name="HltbSection" VerticalAlignment="Top">
                                                 <TextBlock Text="HOW LONG TO BEAT" Style="{StaticResource ModuleHeader}" />
+                                                <!-- Helium-style HLTB progress bar, hosted with a graphite rounded track -->
+                                                <Border CornerRadius="4" ClipToBounds="True" Height="20" Margin="0,0,0,16"
+                                                        Background="{DynamicResource BackgroundBrush}">
+                                                    <ContentControl x:Name="HowLongToBeat_PluginProgressBar"
+                                                                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+                                                </Border>
                                                 <Grid>
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="*" />
@@ -214,7 +238,7 @@
                                                     </Grid.Resources>
                                                     <StackPanel Grid.Column="0" Style="{StaticResource HltbStat}" Visibility="{Binding ElementName=HltbMainStory, Path=Visibility}">
                                                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                                            <Path Style="{StaticResource HltbIcon}" Data="M18,2H6C4.9,2 4,2.9 4,4V20C4,21.1 4.9,22 6,22H18C19.1,22 20,21.1 20,20V4C20,2.9 19.1,2 18,2M18,20H6V4H7V12L10,9.5L13,12V4H18V20Z" />
+                                                            <Path Style="{StaticResource HltbIcon}" Data="M12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22C6.47,22 2,17.5 2,12A10,10 0 0,1 12,2M12.5,7V12.25L17,14.92L16.25,16.15L11,13V7H12.5Z" />
                                                             <TextBlock Text="MAIN STORY" Style="{StaticResource HltbLabel}" />
                                                         </StackPanel>
                                                         <TextBlock x:Name="HltbMainStory" Style="{StaticResource HltbValue}"
@@ -222,7 +246,7 @@
                                                     </StackPanel>
                                                     <StackPanel Grid.Column="1" Style="{StaticResource HltbStat}" Visibility="{Binding ElementName=HltbMainExtra, Path=Visibility}">
                                                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                                            <Path Style="{StaticResource HltbIcon}" Data="M3,5H21V7H3V5M3,11H21V13H3V11M3,17H15V19H3V17M19,15V19H17V21H19V23H21V21H23V19H21V15H19Z" />
+                                                            <Path Style="{StaticResource HltbIcon}" Data="M14.47 15.08L11 13V7H12.5V12.25L15.58 14.08C15.17 14.36 14.79 14.7 14.47 15.08M13.08 19.92C12.72 19.97 12.37 20 12 20C7.58 20 4 16.42 4 12S7.58 4 12 4 20 7.58 20 12C20 12.37 19.97 12.72 19.92 13.08C20.61 13.18 21.25 13.4 21.84 13.72C21.94 13.16 22 12.59 22 12C22 6.5 17.5 2 12 2S2 6.5 2 12C2 17.5 6.47 22 12 22C12.59 22 13.16 21.94 13.72 21.84C13.4 21.25 13.18 20.61 13.08 19.92M18 15V18H15V20H18V23H20V20H23V18H20V15H18Z" />
                                                             <TextBlock Text="MAIN + EXTRAS" Style="{StaticResource HltbLabel}" />
                                                         </StackPanel>
                                                         <TextBlock x:Name="HltbMainExtra" Style="{StaticResource HltbValue}"
@@ -238,25 +262,96 @@
                                                     </StackPanel>
                                                 </Grid>
                                             </StackPanel>
+                                            </Border>
 
-                                            <Rectangle Grid.Column="3" Width="1" Fill="{DynamicResource DividerBrush}"
-                                                       VerticalAlignment="Stretch" Margin="0,16"
-                                                       Visibility="{Binding ElementName=AchSection, Path=Visibility}" />
-
-                                            <!-- Achievements (interactive compact grid, width-constrained so it wraps + fits) -->
-                                            <StackPanel x:Name="AchSection" Grid.Column="4" Margin="26,22" VerticalAlignment="Top" ClipToBounds="True">
-                                                <StackPanel.Style>
-                                                    <Style TargetType="StackPanel">
+                                            <!-- Achievements (MIDDLE): custom badge grid via PlayniteAchievements Modern Bindings
+                                                 (PluginSettings root). Bounded wrapping grid; hover a badge for name + rarity +
+                                                 description ("how to beat"). -->
+                                            <Border Grid.Column="2">
+                                                <Border.Style>
+                                                    <Style TargetType="Border" BasedOn="{StaticResource ModuleCard}">
                                                         <Setter Property="Visibility" Value="Collapsed" />
                                                         <Style.Triggers>
-                                                            <DataTrigger Binding="{PluginSettings Plugin=PlayniteAchievements, Path=HasData, FallbackValue=False}" Value="True"><Setter Property="Visibility" Value="Visible" /></DataTrigger>
+                                                            <DataTrigger Binding="{PluginSettings Plugin=PlayniteAchievements, Path=HasAchievements, FallbackValue=False}" Value="True"><Setter Property="Visibility" Value="Visible" /></DataTrigger>
                                                         </Style.Triggers>
                                                     </Style>
-                                                </StackPanel.Style>
-                                                <TextBlock Text="{DynamicResource LOCSuccessStoryAchievements}" Style="{StaticResource ModuleHeader}" />
-                                                <ContentControl x:Name="PlayniteAchievements_PluginCompactList"
-                                                                HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" />
-                                            </StackPanel>
+                                                </Border.Style>
+                                                <DockPanel x:Name="AchSection">
+                                                    <DockPanel DockPanel.Dock="Top" Margin="0,0,0,12">
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <TextBlock Text="ACHIEVEMENTS" Style="{StaticResource ModuleHeader}" Margin="0" />
+                                                            <TextBlock Style="{StaticResource ModuleHeader}" Margin="10,0,0,0"
+                                                                       Text="{PluginSettings Plugin=PlayniteAchievements, Path=UnlockedCount, FallbackValue=''}" />
+                                                            <TextBlock Style="{StaticResource ModuleHeader}" Margin="3,0,0,0" Text="/" />
+                                                            <TextBlock Style="{StaticResource ModuleHeader}" Margin="3,0,0,0"
+                                                                       Text="{PluginSettings Plugin=PlayniteAchievements, Path=AchievementCount, FallbackValue=''}" />
+                                                        </StackPanel>
+                                                    </DockPanel>
+                                                    <!-- Virtualized ~8-wide badge grid: only on-screen badges render, which fixes the
+                                                         "render every badge on each game-select" perf hit. Bounded to ~3 rows, scroll for more.
+                                                         Uses the achievements plugin's bundled VirtualizingWrapPanel. -->
+                                                    <!-- Path=AchievementsOldestFirst = chronological by unlock (first achievement acquired first).
+                                                         These Modern-Bindings lists are FIXED orders; the plugin's settings-window sort does NOT reach them. -->
+                                                    <ListBox ItemsSource="{PluginSettings Plugin=PlayniteAchievements, Path=AchievementsOldestFirst}"
+                                                             MaxHeight="172" BorderThickness="0" Background="Transparent" Padding="0"
+                                                             ScrollViewer.CanContentScroll="True"
+                                                             ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                                             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                                             VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Recycling">
+                                                        <ListBox.ItemsPanel>
+                                                            <ItemsPanelTemplate>
+                                                                <vwp:VirtualizingWrapPanel Orientation="Horizontal" SpacingMode="None" />
+                                                            </ItemsPanelTemplate>
+                                                        </ListBox.ItemsPanel>
+                                                        <ListBox.ItemContainerStyle>
+                                                            <Style TargetType="ListBoxItem">
+                                                                <Setter Property="Margin" Value="0,0,4,4" />
+                                                                <Setter Property="Template">
+                                                                    <Setter.Value>
+                                                                        <ControlTemplate TargetType="ListBoxItem"><ContentPresenter /></ControlTemplate>
+                                                                    </Setter.Value>
+                                                                </Setter>
+                                                            </Style>
+                                                        </ListBox.ItemContainerStyle>
+                                                        <ListBox.ItemTemplate>
+                                                            <DataTemplate>
+                                                                <Border Width="50" Height="50" CornerRadius="4"
+                                                                        ClipToBounds="True" Background="{DynamicResource ElevatedSurfaceBrush}"
+                                                                        ToolTipService.InitialShowDelay="250" ToolTipService.ShowDuration="20000">
+                                                                    <Border.ToolTip>
+                                                                        <ToolTip MaxWidth="340">
+                                                                            <StackPanel>
+                                                                                <TextBlock Text="{Binding Name}" FontWeight="Bold" TextWrapping="Wrap"
+                                                                                           Foreground="{DynamicResource TextBrush}" />
+                                                                                <TextBlock Text="{Binding RarityText}" FontSize="11" Margin="0,3,0,0"
+                                                                                           Foreground="{DynamicResource TextBrushDarker}" />
+                                                                                <TextBlock Text="{Binding Description}" TextWrapping="Wrap" Margin="0,7,0,0"
+                                                                                           Foreground="{DynamicResource TextBrushDarker}" />
+                                                                            </StackPanel>
+                                                                        </ToolTip>
+                                                                    </Border.ToolTip>
+                                                                    <Grid>
+                                                                        <!-- Colour base: shown when unlocked, and a safe fallback if the grayscale bind fails -->
+                                                                        <Image x:Name="AchColor" Source="{Binding Icon}" Stretch="UniformToFill"
+                                                                               RenderOptions.BitmapScalingMode="Fant" />
+                                                                        <!-- True grayscale (default = unobtained); collapsed when unlocked so colour shows through -->
+                                                                        <Image x:Name="AchGray" Stretch="UniformToFill" RenderOptions.BitmapScalingMode="Fant">
+                                                                            <Image.Source>
+                                                                                <FormatConvertedBitmap DestinationFormat="Gray8" Source="{Binding Icon}" />
+                                                                            </Image.Source>
+                                                                        </Image>
+                                                                    </Grid>
+                                                                </Border>
+                                                                <DataTemplate.Triggers>
+                                                                    <DataTrigger Binding="{Binding Unlocked}" Value="True">
+                                                                        <Setter TargetName="AchGray" Property="Visibility" Value="Collapsed" />
+                                                                    </DataTrigger>
+                                                                </DataTemplate.Triggers>
+                                                            </DataTemplate>
+                                                        </ListBox.ItemTemplate>
+                                                    </ListBox>
+                                                </DockPanel>
+                                            </Border>
                                         </Grid>
 
                                         <Rectangle Height="1" Fill="{DynamicResource DividerBrush}"

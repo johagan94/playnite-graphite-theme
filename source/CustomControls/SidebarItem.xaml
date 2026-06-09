@@ -8,7 +8,7 @@
         <Setter Property="Foreground" Value="#dbdbdb" />
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="FocusVisualStyle" Value="{x:Null}" />
-        <Setter Property="BorderThickness" Value="3,0,0,0" />
+        <Setter Property="BorderThickness" Value="0" />
         <Setter Property="Width" Value="40" />
         <Setter Property="Height" Value="40" />
         <Setter Property="Template">
@@ -18,7 +18,7 @@
                         <ProgressBar x:Name="PART_ProgressStatus"
                                      BorderThickness="0" Background="Transparent"
                                      HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
-                        <Border Background="{TemplateBinding Background}"
+                        <Border Background="{TemplateBinding Background}" CornerRadius="6" Margin="2,1"
                                 Padding="{Binding IconPadding}"
                                 BorderThickness="{TemplateBinding BorderThickness}"
                                 BorderBrush="{TemplateBinding BorderBrush}">
@@ -31,23 +31,14 @@
             </Setter.Value>
         </Setter>
         <Style.Triggers>
+            <!-- Selection = a dark pill + brighter icon (no white accent bar). -->
             <DataTrigger Binding="{Binding Selected}" Value="True">
                 <Setter Property="Foreground" Value="{DynamicResource GlyphBrush}" />
-                <Setter Property="BorderBrush" Value="{DynamicResource GlyphBrush}" />
+                <Setter Property="Background" Value="#59000000" />
             </DataTrigger>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="#1FFFFFFF" />
-                <Setter Property="BorderBrush" Value="{DynamicResource GlyphBrush}" />
+                <Setter Property="Background" Value="#2E000000" />
             </Trigger>
-            <DataTrigger Binding="{Settings SidebarPosition}" Value="Right">
-                <Setter Property="BorderThickness" Value="0,0,3,0" />
-            </DataTrigger>
-            <DataTrigger Binding="{Settings SidebarPosition}" Value="Top">
-                <Setter Property="BorderThickness" Value="0,3,0,0" />
-            </DataTrigger>
-            <DataTrigger Binding="{Settings SidebarPosition}" Value="Bottom">
-                <Setter Property="BorderThickness" Value="0,0,0,3" />
-            </DataTrigger>
             <MultiTrigger>
                 <MultiTrigger.Conditions>
                     <Condition Property="Content" Value="{x:Null}" />

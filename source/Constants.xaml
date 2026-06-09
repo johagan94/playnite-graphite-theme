@@ -91,9 +91,11 @@
     <SolidColorBrush x:Key="CheckBoxCheckMarkBkBrush" Color="{DynamicResource MainColorDark}" />
     <SolidColorBrush x:Key="DataChangeNotifBrush" Color="{DynamicResource DataChangeNotifColor}" />
 
-    <SolidColorBrush x:Key="PositiveRatingBrush" Color="#78ffa0" />
-    <SolidColorBrush x:Key="NegativeRatingBrush" Color="#ff6b6b" />
-    <SolidColorBrush x:Key="MixedRatingBrush" Color="#fffca1" />
+    <!-- Scores kept grayscale (no green/red/yellow): graduated brightness conveys
+         high/mid/low while staying consistent with the rest of the text palette. -->
+    <SolidColorBrush x:Key="PositiveRatingBrush" Color="#E8E8E8" />
+    <SolidColorBrush x:Key="NegativeRatingBrush" Color="#6E7079" />
+    <SolidColorBrush x:Key="MixedRatingBrush" Color="#9A9CA3" />
 
     <SolidColorBrush x:Key="WarningBrush" Color="#ff6b6b" />
 
